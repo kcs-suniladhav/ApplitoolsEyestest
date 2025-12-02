@@ -1,3 +1,6 @@
+[![CI](https://github.com/kcs-suniladhav/ApplitoolsEyestest/actions/workflows/ci.yml/badge.svg)](https://github.com/kcs-suniladhav/ApplitoolsEyestest/actions/workflows/ci.yml)
+# Cypress + Applitools Eyes Visual Testing Setup
+
 # Cypress + Applitools Eyes Visual Testing Setup
 
 This project integrates **Cypress** with **Applitools Eyes** for automated visual testing of the Visual Comfort website designer page.
