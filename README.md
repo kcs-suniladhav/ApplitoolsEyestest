@@ -67,6 +67,31 @@ npm run test
 npm run test:headed
 ```
 
+## Applitools Eyes (optional)
+
+This project can integrate with Applitools Eyes using the `@applitools/eyes-cypress` plugin. The plugin may require additional bundler/node configuration in some environments (some Applitools utilities import Node built-ins such as `stream`, which can cause the Cypress bundler to fail). Follow these steps to enable Eyes safely:
+
+- Add the repository secret `APPLITOOLS_API_KEY` in GitHub Settings → Secrets → Actions.
+- Ensure your local and CI Node version is `>= 20.18.1` (CI already uses `20.18.1` in the workflow).
+- Install the plugin locally (if not already): `npm install --save-dev @applitools/eyes-cypress`.
+- In `cypress.config.js` enable the plugin by adding:
+
+```js
+try {
+  require('@applitools/eyes-cypress')(module);
+} catch (e) {
+  console.warn('Applitools Eyes plugin not installed or failed to initialize.');
+}
+```
+
+- In `cypress/support/e2e.js` add the commands import once your bundler is configured and `stream` (and other built-ins) are polyfilled or resolvable:
+
+```js
+import '@applitools/eyes-cypress/commands'
+```
+
+If you encounter a bundling error such as "Could not resolve 'stream'", either add a browser polyfill (for example `stream-browserify`) and alias it during bundling, or configure the esbuild preprocessor to handle Node built-ins. If you'd like, I can add the small esbuild alias+polyfill setup for you.
+
 ### Run Tests with Chrome Browser
 ```bash
 npm run test:chrome

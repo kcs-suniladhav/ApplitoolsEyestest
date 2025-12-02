@@ -4,6 +4,28 @@ const preprocessor = require('@badeball/cypress-cucumber-preprocessor');
 let createEsbuildPlugin = require('@badeball/cypress-cucumber-preprocessor/esbuild');
 createEsbuildPlugin = createEsbuildPlugin && createEsbuildPlugin.default ? createEsbuildPlugin.default : createEsbuildPlugin;
 
+// Alias plugin to map Node built-ins to browser polyfills for esbuild
+let esbuildAlias;
+try {
+  esbuildAlias = require('esbuild-plugin-alias');
+} catch (err) {
+  // eslint-disable-next-line no-console
+  console.warn('esbuild alias plugin not available; Node built-ins may fail to bundle.');
+}
+
+// Provide a mapping for common Node built-ins used by Applitools packages
+const aliasMap = {
+  stream: require.resolve('stream-browserify')
+};
+// Applitools Eyes Cypress plugin (defensive). If not installed, tests still run.
+try {
+  // This module patches Cypress to provide `cy.eyesOpen`, `cy.eyesCheckWindow`, `cy.eyesClose`, etc.
+  require('@applitools/eyes-cypress')(module);
+} catch (err) {
+  // eslint-disable-next-line no-console
+  console.warn('Applitools Eyes plugin not installed. Install @applitools/eyes-cypress to enable dashboard reporting.');
+}
+
 async function setupNodeEvents(on, config) {
   // Cucumber preprocessor
   try {
@@ -16,12 +38,12 @@ async function setupNodeEvents(on, config) {
   }
   
   // esbuild bundler
-  on(
-    'file:preprocessor',
-    createBundler({
-      plugins: [createEsbuildPlugin()],
-    })
-  );
+  const bundlerPlugins = [createEsbuildPlugin()];
+  if (esbuildAlias) {
+    bundlerPlugins.push(esbuildAlias(aliasMap));
+  }
+  const bundler = createBundler({ plugins: bundlerPlugins });
+  on('file:preprocessor', bundler);
 
   // Image comparison task
   const { compareImages } = require('./cypress/tasks/compareImages');

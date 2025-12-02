@@ -9,6 +9,8 @@ on:
 jobs:
   e2e:
     runs-on: ubuntu-latest
+    env:
+      APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
