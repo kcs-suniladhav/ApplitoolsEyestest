@@ -12,3 +12,12 @@ if (!app.document.head.querySelector('[data-hide-command-log-request]')) {
   app.document.head.appendChild(style);
 }
 
+// Applitools Eyes commands for visual testing
+// Provides cy.eyesOpen, cy.eyesCheckWindow, cy.eyesClose, etc.
+try {
+  require('@applitools/eyes-cypress/commands');
+} catch (err) {
+  // eslint-disable-next-line no-console
+  console.warn('Applitools Eyes commands not available. Install @applitools/eyes-cypress to enable.');
+}
+

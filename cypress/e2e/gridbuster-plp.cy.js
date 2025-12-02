@@ -2,6 +2,24 @@ describe('Gridbuster Designer - Visual Testing', () => {
   const baseUrl = 'https://stage7.visualcomfort.com';
   const designerUrl = '/us/c/our-designers/anne-marie-barton';
 
+  beforeEach(() => {
+    // Open Eyes session for the test run if available
+    if (cy.eyesOpen) {
+      cy.eyesOpen({
+        appName: 'VisualComfort PLP',
+        testName: 'Gridbuster Designer - PLP visual tests',
+        batchName: `CI - ${Cypress.env('GITHUB_RUN_NUMBER') || 'local'}`
+      });
+    }
+  });
+
+  afterEach(() => {
+    // Close Eyes session if available
+    if (cy.eyesClose) {
+      cy.eyesClose(false);
+    }
+  });
+
   it('should load the Gridbuster designer page successfully', () => {
     cy.visit(baseUrl + designerUrl);
     
@@ -15,6 +33,11 @@ describe('Gridbuster Designer - Visual Testing', () => {
     
     // Verify page body is visible
     cy.get('body').should('be.visible');
+    
+    // Capture full page with Applitools Eyes
+    if (cy.eyesCheckWindow) {
+      cy.eyesCheckWindow('Full page load');
+    }
     
     // Take screenshot for visual baseline
     cy.screenshot('gridbuster-01-full-page-load', { overwrite: true });
@@ -52,6 +75,11 @@ describe('Gridbuster Designer - Visual Testing', () => {
 
     cy.log('✓ All product images are visible and not broken');
     
+    // Capture scrolled page with Applitools Eyes
+    if (cy.eyesCheckWindow) {
+      cy.eyesCheckWindow('Page after scroll');
+    }
+    
     // Take screenshot of scrolled view
     cy.screenshot('gridbuster-02-page-after-scroll', { overwrite: true });
   });
@@ -84,6 +112,11 @@ describe('Gridbuster Designer - Visual Testing', () => {
 
         cy.log('✓ All products/cards are properly aligned in grid layout');
       });
+
+    // Capture grid with Applitools Eyes
+    if (cy.eyesCheckWindow) {
+      cy.eyesCheckWindow('Grid alignment');
+    }
 
     // Take screenshot for grid validation
     cy.screenshot('gridbuster-03-grid-validation', { overwrite: true });
