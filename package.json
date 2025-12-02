@@ -1,0 +1,37 @@
+{
+  "name": "cypress-applitools-visual-testing",
+  "version": "1.0.0",
+  "description": "Visual testing with Cypress and Applitools Eyes",
+  "main": "index.js",
+  "scripts": {
+    "test": "cypress run",
+    "test:open": "cypress open",
+    "test:headed": "cypress run --headed",
+    "test:chrome": "cypress run --browser chrome",
+    "upload:applitools": "node upload-to-applitools.js"
+  },
+  "keywords": [
+    "cypress",
+    "applitools",
+    "visual-testing"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@applitools/eyes-webdriverio": "^5.59.16",
+    "@badeball/cypress-cucumber-preprocessor": "20.0.0",
+    "@bahmutov/cypress-esbuild-preprocessor": "2.1.5",
+    "axios": "^1.13.2",
+    "cypress": "^13.6.0",
+    "dotenv": "^16.3.1",
+    "pixelmatch": "^5.3.0",
+    "pngjs": "^7.0.0",
+    "fs-extra": "^11.1.1",
+    "fast-glob": "^3.2.12",
+    "cheerio": "1.0.0-rc.12",
+    "undici": "5.28.4",
+    "which": "4.0.0",
+    "hosted-git-info": "7.0.1",
+    "normalize-package-data": "6.0.1"
+  }
+}
