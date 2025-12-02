@@ -69,28 +69,46 @@ npm run test:headed
 
 ## Applitools Eyes (optional)
 
-This project can integrate with Applitools Eyes using the `@applitools/eyes-cypress` plugin. The plugin may require additional bundler/node configuration in some environments (some Applitools utilities import Node built-ins such as `stream`, which can cause the Cypress bundler to fail). Follow these steps to enable Eyes safely:
+This project is already configured with Applitools Eyes using the `@applitools/eyes-cypress` plugin. The bundler has been configured with polyfills and aliases to handle Node built-ins (like `stream`). To enable dashboard uploads and see results on Applitools:
 
-- Add the repository secret `APPLITOOLS_API_KEY` in GitHub Settings → Secrets → Actions.
-- Ensure your local and CI Node version is `>= 20.18.1` (CI already uses `20.18.1` in the workflow).
-- Install the plugin locally (if not already): `npm install --save-dev @applitools/eyes-cypress`.
-- In `cypress.config.js` enable the plugin by adding:
+1. **Create Applitools Account** (if not already done)
+  - Go to https://applitools.com and sign up for a free account.
+  - Copy your API Key from account settings.
 
-```js
-try {
-  require('@applitools/eyes-cypress')(module);
-} catch (e) {
-  console.warn('Applitools Eyes plugin not installed or failed to initialize.');
-}
-```
+2. **Add GitHub Secret** (for CI/GitHub Actions)
+  - Go to your GitHub repo → Settings → Secrets and variables → Actions.
+  - Click "New repository secret".
+  - Name: `APPLITOOLS_API_KEY`
+  - Value: Your Applitools API key (paste from step 1).
+  - Save.
 
-- In `cypress/support/e2e.js` add the commands import once your bundler is configured and `stream` (and other built-ins) are polyfilled or resolvable:
+3. **Set Local Environment (Optional, for local runs)**
+  - Set the environment variable before running tests:
 
-```js
-import '@applitools/eyes-cypress/commands'
-```
+  **Windows PowerShell:**
+  ```powershell
+  $env:APPLITOOLS_API_KEY = "your_api_key_here"
+  npx cypress run
+  ```
+   
+  **macOS/Linux:**
+  ```bash
+  export APPLITOOLS_API_KEY="your_api_key_here"
+  npx cypress run
+  ```
 
-If you encounter a bundling error such as "Could not resolve 'stream'", either add a browser polyfill (for example `stream-browserify`) and alias it during bundling, or configure the esbuild preprocessor to handle Node built-ins. If you'd like, I can add the small esbuild alias+polyfill setup for you.
+4. **Run Tests and View Results**
+  - Run tests locally: `npm test` or `npm run test:open`.
+  - Visual checkpoints are now sent to Applitools dashboard when the API key is set.
+  - View results at https://applitools.com → Test Results.
+  - CI runs (GitHub Actions) will also upload results when the secret is configured.
+
+**Current Setup:**
+- `@applitools/eyes-cypress` is installed and ready to use.
+- Plugin is registered in `cypress.config.js` with defensive error handling.
+- Eyes commands (`cy.eyesOpen`, `cy.eyesCheckWindow`, `cy.eyesClose`) are imported in `cypress/support/e2e.js`.
+- Bundler (esbuild) is configured with polyfills (`stream-browserify`) and aliases so Node built-ins don't cause build errors.
+- Tests already contain `cy.eyesCheckWindow()` calls to capture visual checkpoints.
 
 ### Run Tests with Chrome Browser
 ```bash
