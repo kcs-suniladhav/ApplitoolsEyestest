@@ -76,11 +76,8 @@ module.exports = defineConfig({
     defaultCommandTimeout: 10000,
     requestTimeout: 10000,
     responseTimeout: 10000,
-    // NOTE: Cucumber .feature specs currently have a preprocessor compatibility issue.
-    // Using .cy.js tests (includes BDD scenario structure converted to JS) as workaround.
-    // To re-enable .feature files, upgrade Node >= 20.18.1 and re-add:
-    // specPattern: ['cypress/e2e/features/**/*.feature', 'cypress/e2e/**/*.cy.js'],
-    specPattern: ['cypress/e2e/**/*.cy.js'],
+    // Enable .feature files and .cy.js tests
+    specPattern: ['cypress/e2e/features/**/*.feature', 'cypress/e2e/**/*.cy.js'],
     setupNodeEvents,
   },
 });
