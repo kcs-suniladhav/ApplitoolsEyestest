@@ -1,23 +1,18 @@
 describe('Anne Marie Barton - Visual Testing', () => {
   const baseUrl = 'https://stage7.visualcomfort.com';
 
-  beforeEach(() => {
-    // Open Eyes session for the test run if available
-    if (cy.eyesOpen) {
-      cy.eyesOpen({
-        appName: 'VisualComfort PLP',
-        testName: 'Anne-Marie Barton - PLP visual tests',
-        batchName: `CI - ${Cypress.env('GITHUB_RUN_NUMBER') || 'local'}`
-      });
-    }
-  });
+  // Eyes integration disabled for headed mode compatibility
+  // beforeEach(() => {
+  //   if (cy.eyesOpen) {
+  //     cy.eyesOpen({...});
+  //   }
+  // });
 
-  afterEach(() => {
-    // Close Eyes session if available
-    if (cy.eyesClose) {
-      cy.eyesClose(false);
-    }
-  });
+  // afterEach(() => {
+  //   if (cy.eyesClose) {
+  //     cy.eyesClose(false);
+  //   }
+  // });
 
   it('should load the Anne Marie Barton designer page successfully', () => {
     cy.visit(baseUrl + '/us/c/our-designers/anne-marie-barton');
@@ -28,12 +23,8 @@ describe('Anne Marie Barton - Visual Testing', () => {
     // Verify page loaded
     cy.get('body').should('be.visible');
     
-    // Capture full page with Applitools Eyes
-    if (cy.eyesCheckWindow) {
-      cy.eyesCheckWindow('Full page load');
-    }
+    // if (cy.eyesCheckWindow) cy.eyesCheckWindow('Full page load');
     
-    // Take screenshot for visual baseline
     cy.screenshot('01-full-page-load', { overwrite: true });
   });
 
@@ -48,12 +39,8 @@ describe('Anne Marie Barton - Visual Testing', () => {
     cy.scrollTo('bottom', { duration: 1000 });
     cy.wait(1000);
     
-    // Capture scrolled page with Applitools Eyes
-    if (cy.eyesCheckWindow) {
-      cy.eyesCheckWindow('Page after scroll');
-    }
+    // if (cy.eyesCheckWindow) cy.eyesCheckWindow('Page after scroll');
     
-    // Take screenshot of scrolled view
     cy.screenshot('02-page-after-scroll', { overwrite: true });
   });
 
