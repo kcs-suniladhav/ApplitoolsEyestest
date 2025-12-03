@@ -166,7 +166,7 @@ describe('Anne Marie Barton - Visual Testing', () => {
   });
 });
 
-describe('Image baseline comparison (non-Cucumber)', () => {
+describe('Image baseline comparison', () => {
   const baseUrl = 'https://stage7.visualcomfort.com';
 
   it('should capture a current snapshot and compare with baseline', () => {

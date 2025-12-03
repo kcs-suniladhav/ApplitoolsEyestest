@@ -76,8 +76,8 @@ module.exports = defineConfig({
     defaultCommandTimeout: 10000,
     requestTimeout: 10000,
     responseTimeout: 10000,
-    // Enable .feature files and .cy.js tests
-    specPattern: ['cypress/e2e/features/**/*.feature', 'cypress/e2e/**/*.cy.js'],
+    // Run only .cy.js tests (feature files excluded for Cypress + Applitools framework)
+    specPattern: ['cypress/e2e/**/*.cy.js'],
     setupNodeEvents,
   },
 });
