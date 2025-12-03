@@ -8,7 +8,9 @@
     "test:open": "cypress open",
     "test:headed": "cypress run --headed",
     "test:chrome": "cypress run --browser chrome",
-    "upload:applitools": "node upload-to-applitools.js"
+    "upload:applitools": "node upload-to-applitools.js",
+    "watch:esbuild": "node scripts/esbuild-watch.js",
+    "watch:esbuild:esm": "node --input-type=module scripts/esbuild-watch.mjs"
   },
   "keywords": [
     "cypress",
