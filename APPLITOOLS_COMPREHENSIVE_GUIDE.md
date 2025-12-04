@@ -50,7 +50,6 @@ This project implements **automated visual testing** for the Visual Comfort webs
 ✅ Maintain visual consistency across pages  
 ✅ Provide baseline snapshots for regression  
 ✅ Generate detailed diff reports  
-✅ Integrate with CI/CD pipelines  
 
 ---
 
