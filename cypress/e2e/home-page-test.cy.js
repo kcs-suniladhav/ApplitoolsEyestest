@@ -2,11 +2,52 @@ const objects = require('../support/pageObjects/objects');
 
 const HOME = objects.HOME_PAGE;
 
+// Helper function to safely call Applitools Eyes commands
+const eyesOpen = (options) => {
+  if (typeof cy.eyesOpen === 'function') {
+    cy.eyesOpen(options);
+  } else {
+    cy.log('⚠ Applitools Eyes not available. Install @applitools/eyes-cypress');
+  }
+};
+
+const eyesCheckWindow = (name) => {
+  if (typeof cy.eyesCheckWindow === 'function') {
+    cy.eyesCheckWindow(name);
+  }
+};
+
+const eyesClose = () => {
+  if (typeof cy.eyesClose === 'function') {
+    cy.eyesClose();
+  }
+};
+
 describe('Home Page Visual Tests', () => {
+  beforeEach(() => {
+    // Initialize Applitools Eyes for each test
+    // Requires APPLITOOLS_API_KEY environment variable to be set
+    eyesOpen({
+      appName: 'Visual Comfort - Demo 3',
+      testName: 'Home Page Visual Tests',
+      batchName: 'Cypress + Applitools Suite',
+      showLogs: true
+    });
+  });
+
+  afterEach(() => {
+    // Close Applitools Eyes and send results to dashboard
+    eyesClose();
+  });
+
   it('01 - should load the home page and capture initial load', () => {
     cy.visit(HOME.baseUrl + HOME.homeUrl);
     cy.wait(2000);
     cy.get(HOME.body).should('be.visible');
+    
+    // Capture visual checkpoint with Applitools Eyes
+    eyesCheckWindow('Home Page - Initial Load');
+    
     cy.screenshot('home-01-initial-load', { overwrite: true });
   });
 
@@ -31,6 +72,9 @@ describe('Home Page Visual Tests', () => {
       expect(loadedCount, 'at least one visible image loaded').to.be.greaterThan(0);
     });
 
+    // Capture visual checkpoint with Applitools Eyes
+    eyesCheckWindow('Home Page - Images Loaded with Scroll');
+    
     cy.screenshot('home-02-images-loaded-scroll', { overwrite: true });
   });
 
@@ -48,6 +92,10 @@ describe('Home Page Visual Tests', () => {
         cy.wrap($els.first()).should('be.visible');
       }
     });
+    
+    // Capture visual checkpoint with Applitools Eyes
+    eyesCheckWindow('Home Page - Hero Section');
+    
     cy.screenshot('home-03-hero-section', { overwrite: true });
   });
 
@@ -79,6 +127,9 @@ describe('Home Page Visual Tests', () => {
       });
     });
 
+    // Capture visual checkpoint with Applitools Eyes
+    eyesCheckWindow('Home Page - Product Grid Alignment');
+    
     cy.screenshot('home-04-grid-alignment', { overwrite: true });
   });
 
@@ -118,12 +169,19 @@ describe('Home Page Visual Tests', () => {
         });
       });
     });
+    
+    // Capture visual checkpoint with Applitools Eyes
+    eyesCheckWindow('Home Page - Baseline vs Current Comparison');
   });
 
   it('06 - should capture responsive layout snapshot', () => {
     cy.viewport(1280, 1024);
     cy.visit(HOME.baseUrl + HOME.homeUrl);
     cy.wait(1500);
+    
+    // Capture visual checkpoint with Applitools Eyes
+    eyesCheckWindow('Home Page - Responsive Layout 1280x1024');
+    
     cy.screenshot('home-07-responsive-layout', { overwrite: true });
   });
 });

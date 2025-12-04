@@ -2,10 +2,45 @@ describe('Anne Marie Barton Designer PLP - Visual Testing and Page Rendering', (
   const baseUrl = 'https://stage7.visualcomfort.com';
   const designerPageUrl = `${baseUrl}/us/c/our-designers/anne-marie-barton`;
 
+  // Helper function to safely call Applitools Eyes commands
+  const eyesOpen = (options) => {
+    if (typeof cy.eyesOpen === 'function') {
+      cy.eyesOpen(options);
+    } else {
+      cy.log('⚠ Applitools Eyes not available. Install @applitools/eyes-cypress');
+    }
+  };
+
+  const eyesCheckWindow = (name) => {
+    if (typeof cy.eyesCheckWindow === 'function') {
+      cy.eyesCheckWindow(name);
+    }
+  };
+
+  const eyesClose = () => {
+    if (typeof cy.eyesClose === 'function') {
+      cy.eyesClose();
+    }
+  };
+
   beforeEach(() => {
+    // Initialize Applitools Eyes for visual regression testing
+    // Requires APPLITOOLS_API_KEY environment variable to be set
+    eyesOpen({
+      appName: 'Visual Comfort - Demo 3',
+      testName: 'Anne Marie Barton Designer PLP',
+      batchName: 'Cypress + Applitools Suite',
+      showLogs: true
+    });
+
     // Navigate to Anne Marie Barton PLP page at the start of each test
     cy.visit(designerPageUrl);
     cy.wait(1500);
+  });
+
+  afterEach(() => {
+    // Close Applitools Eyes and send results to dashboard
+    eyesClose();
   });
 
   it('01 - Load the Anne Marie Barton designer page successfully', () => {
@@ -20,6 +55,9 @@ describe('Anne Marie Barton Designer PLP - Visual Testing and Page Rendering', (
 
     // And the page body should be visible
     cy.get('body').should('be.visible');
+
+    // Capture visual checkpoint with Applitools Eyes
+    eyesCheckWindow('Anne Marie - Full Page Load');
 
     // And a full page screenshot should be taken with name "01-full-page-load"
     cy.screenshot('01-full-page-load', { overwrite: true });
@@ -65,6 +103,9 @@ describe('Anne Marie Barton Designer PLP - Visual Testing and Page Rendering', (
           }
         }
       });
+
+    // Capture visual checkpoint with Applitools Eyes
+    eyesCheckWindow('Anne Marie - Page After Scroll');
 
     // And a full page screenshot should be taken with name "02-page-after-scroll"
     cy.screenshot('02-page-after-scroll', { overwrite: true, timeout: 15000 });
@@ -114,6 +155,9 @@ describe('Anne Marie Barton Designer PLP - Visual Testing and Page Rendering', (
           cy.log(`✓ Products span ${uniqueRows.size} rows`);
         }
       });
+
+    // Capture visual checkpoint with Applitools Eyes
+    eyesCheckWindow('Anne Marie - Full Page Snapshot');
 
     // And a full page screenshot should be taken with name "03-full-page-snapshot"
     cy.screenshot('03-full-page-snapshot', { overwrite: true, timeout: 15000 });
@@ -204,6 +248,9 @@ describe('Anne Marie Barton Designer PLP - Visual Testing and Page Rendering', (
     cy.get('body').should('be.visible');
     cy.get('h1, h2, [data-testid="page-title"], .page-title, .designer-title').should('have.length.greaterThan', 0);
 
+    // Capture visual checkpoint with Applitools Eyes
+    eyesCheckWindow('Anne Marie - PLP Validation');
+
     // And there should be no visual differences detected in page rendering
     cy.log('✓ PLP page visual rendering and image integrity validation complete');
   });
@@ -247,5 +294,8 @@ describe('Anne Marie Barton Designer PLP - Visual Testing and Page Rendering', (
         });
       });
     });
+    
+    // Capture visual checkpoint with Applitools Eyes
+    eyesCheckWindow('Anne Marie - Baseline Comparison Result');
   });
 });

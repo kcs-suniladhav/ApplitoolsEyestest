@@ -17,13 +17,16 @@ try {
 const aliasMap = {
   stream: require.resolve('stream-browserify')
 };
-// Applitools Eyes Cypress plugin (defensive). If not installed, tests still run.
+
+// Load Applitools Eyes plugin - MUST be done at config time
+let appliToolsPlugin;
 try {
-  // This module patches Cypress to provide `cy.eyesOpen`, `cy.eyesCheckWindow`, `cy.eyesClose`, etc.
-  require('@applitools/eyes-cypress')(module);
+  // This patches Cypress to provide cy.eyesOpen, cy.eyesCheckWindow, cy.eyesClose, etc.
+  appliToolsPlugin = require('@applitools/eyes-cypress');
 } catch (err) {
   // eslint-disable-next-line no-console
-  console.warn('Applitools Eyes plugin not installed. Install @applitools/eyes-cypress to enable dashboard reporting.');
+  console.warn('⚠ Applitools Eyes plugin not installed. Install @applitools/eyes-cypress to enable visual testing.');
+  console.warn('Command: npm install @applitools/eyes-cypress');
 }
 
 async function setupNodeEvents(on, config) {
@@ -79,5 +82,12 @@ module.exports = defineConfig({
     // Run only .cy.js tests (feature files excluded for Cypress + Applitools framework)
     specPattern: ['cypress/e2e/**/*.cy.js'],
     setupNodeEvents,
+    // Initialize Applitools plugin at module level
+    setupFilesAfterEnv: [],
   },
 });
+
+// Initialize Applitools plugin if available
+if (appliToolsPlugin) {
+  appliToolsPlugin(module);
+}
